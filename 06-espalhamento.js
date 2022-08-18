@@ -45,3 +45,38 @@ let verduras = ['alface', 'couve', 'rúcula']
 let hortifruti = [ ...frutas, ...verduras ] 
 
 console.log({hortifruti})
+
+////////////////////////////////////////////////////////////////////////
+
+// Problema: como declarar uma função que aceita um número arbitrário
+// de parâmetros?
+console.log('Soma 7 números:', soma(10, 12, 15, 18, 7, 2, 19)) // 7 parâmetros
+console.log('Soma 15 números:', soma(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)) // 15 parâmetros
+
+// O espalhamento também resolve esse tipo de problema. Pode ser usado em
+// parâmetros de função, quando então passa a ser conhecido como PARÂMETRO
+// DE RESTO.
+function soma(...nums) {
+    let res = 0
+    // Dentro da função, o parâmetro de resto se comporta como um vetor
+    for(let num of nums) res += num
+    return res
+}
+
+// O parâmetro de resto também pode ser usado junto com parâmetros regulares.
+// Nesse caso, o parâmetro de resto deve vir por último na declaração da função.
+function calcular(oper, ...nums) {
+    let res
+    if(oper === '+') {
+        res = 0
+        for(let num of nums) res += num
+    }
+    else if(oper === '*') {
+        res = 1
+        for(let num of nums) res *= num
+    }
+    return res
+}
+
+console.log('Soma dos números de 1 a 5:', calcular('+', 1, 2, 3, 4, 5))
+console.log('Produto dos números de 1 a 5:', calcular('*', 1, 2 , 3, 4, 5))
