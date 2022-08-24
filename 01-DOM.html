@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        // Criando um novo elemento <p> via JS
+        let parag = document.createElement('p')
+        parag.textContent = 'Este parágrafo foi criado com JavaScript'
+
+        // Vamos colocar o parágrafo criado dentro da div cujo id é root.
+        // Para isso, devemos primeiro "capturar" essa div.
+        let root = document.getElementById('root')
+
+        // Com a div capturada, podemos colocar o parágrafo dentro dela
+        root.appendChild(parag)
+
+        // Criando uma nova div
+        let novaDiv = document.createElement('div')
+
+        novaDiv.textContent = 'DIV criada com JavaScript'
+        novaDiv.style.border = '3px dotted green'
+        novaDiv.style.backgroundColor = 'limegreen'
+        novaDiv.id = 'minhaDiv'
+
+        root.appendChild(novaDiv)
+    </script>
+</body>
+</html>
