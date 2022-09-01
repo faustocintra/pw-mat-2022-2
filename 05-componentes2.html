@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .soma {
+            border-radius: 5px;
+            border: 3px solid black;
+            padding: 5px;
+            margin: 5px;
+        }
+        .direita {
+            text-align: right;
+            background-color: lightblue;
+        }
+        .centro {
+            text-align: center;
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /*
+            Componente que recebe dois números e exibe a soma deles.
+            Ele possui duas props personalizadas (n1 e n2) e mais as
+            props padrão, que são recebidas como argumentos de resto.
+        */
+
+        const Soma = ({n1, n2, ...props}) => 
+            <div className="soma" {...props}> {n1 + n2} </div>
+
+        // Componente que recebe qualquer prop
+        const ParagCentro = props =>
+            <p className="centro" {...props} />
+
+        // Componente que só recebe props personalizadas
+        const ParagDireita = ({id, children}) =>
+            <p className="direita" id={id}> {children} </p>
+            
+        const container =
+            <>
+                <Soma id="soma1" n1="40" n2="25" />
+
+                {/* Ao passar props que NÃO SÃO STRING, deve-se usar {} */}
+                <Soma id="soma2" n1={40} n2={25} />
+
+                {/* ParagCentro irá processar qualquer prop que for passada a ele */}
+                <ParagCentro id="centro1" title="Centralizado" seila="numsei">
+                    Centralizado
+                </ParagCentro>
+
+                {/* Já ParagDireita irá processar apenas as props id e children, 
+                    ignorando as demais */}
+                <ParagDireita id="direita1" title="À direita" seila="numsei">
+                    À direita
+                </ParagDireita>
+            </>
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(container)
+       
+    </script>
+    
+</body>
+</html>
