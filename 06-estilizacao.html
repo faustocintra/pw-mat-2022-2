@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="06.css">
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        /*
+            Para especificar estilos CSS em JSX, é necessário atentar-se para as
+            seguintes regras:
+            1) O nome das propriedades não pode ter hífen; deve-se usar camelCase
+               em vez disso. Ex.: background-color deve ser escrito backgroundColor.
+            2) Todos os valores de propriedade que não forem 100% numéricos devem
+               vir entre aspas. Ex.: 30px => '30px'.
+            3) As diferentes propriedades são separadas por VÍRGULA (e não ponto-e-
+                vírgula, como em CSS).
+            O estilo abaixo, em CSS puro, ficaria:
+            {
+                background-color: orange;
+                font-size: 30px;
+                font-family: "Courier New", monospace;
+                border: 4px dotted blue;
+            }
+        */
+        const estilo1 = {
+            backgroundColor: 'orange',
+            fontSize: '30px',
+            fontFamily: '"Courier New", monospace',
+            border: '4px dotted blue'
+        }
+
+        /*
+            Componente de caixa altamente personalizado. Recebe tanto props
+            personalizadas (style e size) quanto props padrão (...props).
+            Além disso, provê um valor padrão para a prop size caso o valor
+            desta não tenha sido passado.
+        */
+        const BoxItalic = ({style, size = 'small', ...props}) =>
+            <div
+                className={`box box--${size}`}
+                style={{ fontStyle: 'italic', ...style }}
+                {...props}
+            />
+
+        const container =
+            <>
+                {/*
+                    É possível aplicar mais de uma classe CSS a um elemento 
+                    usando o atributo className. Nos casos abaixo, foram 
+                    aplicadas as classes box e box--xxxx. Elas foram 
+                    especificadas com um espaço de separação entre elas.
+                */}
+                <div className="box box--small">Box pequeno 1</div>
+                <div className="box box--medium">Box médio 1</div>
+
+                {/*
+                    Pode-se usar className e style ao mesmo tempo. Os estilos
+                    definidos em style se sobrepõem aos especificados nas classes.
+                */}
+                <div className="box box--large" style={estilo1}>Box grande 1</div>
+
+                {/*
+                    Com frequência, especificamos as regras de estilo dentro do
+                    próprio atributo style. Quando fazemos isso, as regras têm
+                    de vir entre chaves duplas {{}}.
+                */}
+                <div
+                    className="box box--small"
+                    style={{ backgroundColor: 'lightblue', fontWeight: 'bold '}}
+                >
+                    Box pequeno 2
+                </div>
+
+                <div
+                    className="box box--medium"
+                    style={{ 
+                        backgroundColor: 'pink', 
+                        borderColor: 'red',
+                        fontStyle: 'italic'
+                    }}
+                >
+                    Box médio 2
+                </div>
+
+                {/*
+                    Usando o componente BoxItalic. No primeiro caso, não será
+                    especificado o valor da prop size; então, serão criado com
+                    size = small
+                */}
+                <BoxItalic
+                    style={{
+                        backgroundColor: 'tomato',
+                        color: 'beige'
+                    }}
+                    id="boxitalic1"
+                >
+                    Box Italic 1
+                </BoxItalic>
+
+                {/*
+                    Neste segundo exemplo, a prop size será especificada
+                    explicitamente. Além disso, será redefinida a propriedade
+                    fontStyle do estilo, anulando o estilo itálico padrão do
+                    componente.
+                */}
+                <BoxItalic
+                    id="boxitalic2"
+                    title="Exemplo de estilização em React"
+                    size="medium"
+                    style={{
+                        borderColor: 'orange',
+                        color: 'white',
+                        backgroundColor: 'violet',
+                        fontStyle: 'normal'
+                    }}
+                >
+                    Box italic 2
+                </BoxItalic>
+            </>
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(container)
+
+    </script>
+    
+</body>
+</html>
