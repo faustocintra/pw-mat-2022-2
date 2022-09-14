@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        function Form() {
+
+            //let nome
+
+            // Criando uma variável de estado
+            // Uma variável de estado preserva seu valor entre atualizações
+            // do componente
+            // Possui duas partes:
+            // 1) Uma variável somente leitura, que pode ser usada para
+            //    obter o valor armazenado na variável
+            // 2) Uma função de atualização, que DEVE ser usada toda vez
+            //    que se deseja atualizar o valor da variável
+            // Além disso, deve-se especificar o valor inicial da variável
+            // de estado passando-se um parâmetro para função React.useState().
+            // useState() é uma das chamadas "hooks" do React.
+
+            const [nome, setNome] = React.useState('')
+
+            function handleChange(event) {
+                // nome = event.target.value
+                setNome(event.target.value) // Atualizando variável de estado
+                //document.getElementById('var').innerText = nome
+            }
+
+            function handleSubmit(event) {
+                event.preventDefault()
+                alert(`Olá, ${nome}!`)
+            }
+
+            return (
+                <form onSubmit={handleSubmit}>
+                    {/* 
+                        O atributo HTML "for", quando usado em JSX,
+                        deve ser renomeado para "htmlFor"
+                    */}
+                    <label htmlFor="campo-nome">Nome</label>
+                    <input id="campo-nome" onChange={handleChange} /><br />
+                    <div id="var">{nome}</div>
+                    <button type="submit">Enviar</button>
+                </form>
+            )
+        }
+
+        ReactDOM.render(<Form />, document.getElementById('root'))
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        function Form() {
+
+            let nome
+            //let erro = ''
+
+            /*
+                O método React.setState() cria uma variável de estado
+                e retorna um vetor com dois valores.
+                O primeiro valor retornado é o valor da variável de estado.
+                Esse valor é SOMENTE LEITURA.
+                O segundo valor é uma função que deve ser utilizada para 
+                atualizar o valor da variável de estado.
+                O valor inicial da variável de estado é determinado pelo
+                parâmetro de useState().
+            */
+
+            // Declarando uma variável de estado
+            const [erro, setErro] = React.useState('')
+
+            function handleChange(event) {
+                nome = document.getElementById('campo-nome').value
+                
+                if(nome !== nome.toUpperCase()) {
+                    setErro('O nome precisa estar em letras MAIÚSCULAS!')
+                }
+                else {
+                    setErro('')
+                }
+
+                document.getElementById('result').textContent = nome
+            }
+
+            function handleSubmit(event) {
+                event.preventDefault()
+                alert(`Olá, ${nome}!`)
+            }
+
+            return (
+                <form onSubmit={handleSubmit}>
+                    {/*
+                        Em JSX, o atributo HTML "for" deve ser renomeado para
+                        "htmlFor".
+                    */}
+                    <label htmlFor="campo-nome">Nome</label>
+                    <input id="campo-nome" onChange={handleChange} />
+                    <br />
+                    <div id="result">{nome}</div>
+                    <div style={{ color: "red" }}>{erro}</div>
+                    <button type="submit">Enviar</button>
+                </form>
+            )
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(<Form />)
+
+    </script>
+    
+</body>
+</html>
