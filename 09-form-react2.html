@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        function Form() {
+
+            // Variáveis de estado
+            const [num1, setNum1] = React.useState(0)
+            const [num2, setNum2] = React.useState(0)
+
+            function handleChange1(event) {
+                setNum1(Number(event.target.value))
+            }
+
+            function handleChange2(event) {
+                setNum2(Number(event.target.value))
+            }
+             
+            return (
+                <form>
+                    <label>
+                        <span>Primeiro número:</span>
+                        <input 
+                            type="number"
+                            value={num1} 
+                            onChange={handleChange1} 
+                        />
+                    </label>
+                    <br />
+                    <label>
+                        <span>Segundo número:</span>
+                        <input 
+                            type="number"
+                            value={num2}
+                            onChange={handleChange2}
+                        />
+                    </label>
+                    <br />
+                    <div>
+                        <span>Soma: </span>
+                        <span>{num1 + num2}</span>
+                    </div>
+                </form>
+            )
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(<Form />)
+
+    </script>
+    
+</body>
+</html>
