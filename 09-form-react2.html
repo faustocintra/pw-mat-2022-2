@@ -21,12 +21,25 @@
             const [num1, setNum1] = React.useState(0)
             const [num2, setNum2] = React.useState(0)
 
+            /*
             function handleChange1(event) {
                 setNum1(Number(event.target.value))
             }
 
             function handleChange2(event) {
                 setNum2(Number(event.target.value))
+            }
+            */
+
+            // Usando uma única função para manipular o evento onChange
+            // de dois inputs
+            function handleChange(event) {
+                if(event.target.name === 'num1') {
+                    setNum1(Number(event.target.value))
+                }
+                else {  // event.target.name === 'num2'
+                    setNum2(Number(event.target.value))
+                }
             }
              
             return (
@@ -35,8 +48,9 @@
                         <span>Primeiro número:</span>
                         <input 
                             type="number"
+                            name="num1"
                             value={num1} 
-                            onChange={handleChange1} 
+                            onChange={handleChange} 
                         />
                     </label>
                     <br />
@@ -44,8 +58,9 @@
                         <span>Segundo número:</span>
                         <input 
                             type="number"
+                            name="num2"
                             value={num2}
-                            onChange={handleChange2}
+                            onChange={handleChange}
                         />
                     </label>
                     <br />
