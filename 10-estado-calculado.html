@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROVA 1 &bull; Programação Web 2022/2</title>
+    <style>
+        * {
+            font-family: Calibri, Arial, sans-serif;
+        }
+        body {
+            background: maroon;
+            background: linear-gradient(0deg, maroon 0%, coral 100%);
+            height: 100vh;
+        }
+        main {
+            margin: 5%;
+            background-color: white;
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 5px 5px rgba(250, 250, 250, 0.2);
+        }
+        h1 {
+            color: maroon;
+            text-shadow: 2px 2px rgba(0, 100, 0, 0.2);
+            text-align: center;
+        }
+        label span {
+            display: block;
+        }
+        .input-set, .result {
+            margin: 15px auto;
+            padding: 10px;
+            width: 50%;
+            text-align: center;
+        }
+        .input-set label {
+            display: block;
+            color: maroon
+        }
+        .result {
+            background-color: maroon;
+            color: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        function Page() {
+
+            const [peso, setPeso] = React.useState(0)
+            const [altura, setAltura] = React.useState(0)
+            // const [imc, setImc] = React.useState(0)
+            // const [faixaImc, setFaixaImc]  = React.useState('')
+
+            // Estados calculados (variáveis comuns que recebem
+            // o resultado de uma função de cálculo)
+            let imc = calcularImc()
+            let faixaImc = determinarFaixaImc()
+
+            // Função para calcular o IMC
+            function calcularImc() {
+                return peso / altura ** 2
+            }
+
+            // Função para determinar a faixa do IMC
+            function determinarFaixaImc() {
+                // console.log({imc})
+                // Determinando a faixa do IMC
+                if(imc < 18.5) {
+                    return 'Peso baixo'
+                }
+                else if(imc <= 24.9) {
+                    return 'Peso normal'
+                }
+                else if(imc <= 29.9) {
+                    return 'Sobrepeso'
+                }
+                else if(imc <= 34.9) {
+                    return 'Obesidade (Grau I)'
+                }
+                else if(imc <= 39.9) {
+                    return 'Obesidade Severa (Grau II)'
+                }
+                else {
+                    return 'Obesidade Mórbida (Grau III)'
+                }                
+
+            }
+
+            function handleChange(event) {
+                if(event.target.name === 'peso') {
+                    setPeso(Number(event.target.value)) // Já armazena convertido para número
+                }
+                else if(event.target.name === 'altura') {
+                    setAltura(Number(event.target.value))
+                }
+
+                // Atualizando os estados calculados
+                imc = calcularImc()
+                faixaImc = determinarFaixaImc()
+                
+            }
+
+            return (<main>
+                <h1>Cálculo do Índice de Massa Corporal (IMC)</h1>
+
+                <div id="container">
+                    <div className="input-set">
+                        <label>
+                            <span>Peso</span>
+                            <input name="peso" type="number" value={peso} onChange={handleChange} />
+                        </label>
+                    </div>
+
+                    <div className="input-set">
+                        <label>
+                            <span>Altura</span>
+                            <input name="altura" type="number" value={altura} onChange={handleChange} />
+                        </label>
+                    </div>
+
+                    <div className="result">
+                        <div>IMC: {imc}</div>
+                        <div>Faixa: {faixaImc}</div>
+                    </div>
+                </div>
+            </main>)
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(<Page />)
+
+    </script>
+    
+</body>
+</html>
