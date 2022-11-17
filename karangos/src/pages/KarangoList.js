@@ -4,8 +4,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import api from '../lib/api'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const columns = [
+export default function KarangoList() {
+
+  const columns = [
     { 
       field: 'id',        // Campo nos dados retornados pela API
       headerName: 'Cód.',
@@ -63,50 +68,95 @@ const columns = [
         })
       )
     },
-    
-    
+    {
+      field: 'editar',
+      headerName: 'Editar',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params =>  (
+        <IconButton aria-label='Editar'>
+          <EditIcon />
+        </IconButton>
+      )
+    },
+    {
+      field: 'excluir',
+      headerName: 'Excluir',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params =>  (
+        <IconButton aria-label='Excluir' onClick={() => handleDeleteClick(params.id)}>
+          <DeleteForeverIcon color="error" />
+        </IconButton>
+      )
+    },
 
   ];
-    
-export default function KarangoList() {
 
-    const [state, setState] = React.useState({
-      karangos: []  // Vetor vazio
-    })
-    const { karangos } = state
+  const [state, setState] = React.useState({
+    karangos: []  // Vetor vazio
+  })
+  const { karangos } = state
 
-    // useEffect() com vetor de dependências vazio para ser executado
-    // apenas uma vez no momento da montagem do componente
-    React.useEffect(() => {
-      // Buscar os dados da API remota
-      fetchData()
-    }, [])
-
-    async function fetchData() {
+  async function handleDeleteClick(id) {
+    if(window.confirm('Deseja realmente excluir este item?')) {
       try {
-        const response = await api.get('karangos')
-        // Armazenar o response em um variável de estado
-        console.log({RESPONSE: response.data})
-        setState({...state, karangos: response.data})
+        await api.delete(`karangos/${id}`)
+        // Recarrega os dados da grid
+        fetchData()
+        window.alert('Item excluído com sucesso.')
       }
-      catch (error) {
-        alert('ERRO: ' + error.message)
+      catch(error) {
+        window.alert('ERRO: não foi possível excluir o item.\nMotivo: ' + error.message)
       }
     }
+  }
 
-    return (
-      <>
-        <h1>Listagem de Karangos</h1>
-        <Box sx={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={karangos}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[5]}
-            autoHeight
-            disableSelectionOnClick
-          />
-        </Box>
-      </>
-    )
+  // useEffect() com vetor de dependências vazio para ser executado
+  // apenas uma vez no momento da montagem do componente
+  React.useEffect(() => {
+    // Buscar os dados da API remota
+    fetchData()
+  }, [])
+
+  async function fetchData() {
+    try {
+      const response = await api.get('karangos')
+      // Armazenar o response em um variável de estado
+      console.log({RESPONSE: response.data})
+      setState({...state, karangos: response.data})
+    }
+    catch (error) {
+      alert('ERRO: ' + error.message)
+    }
+  }
+
+  return (
+    <>
+      <h1>Listagem de Karangos</h1>
+      <Box sx={{ height: 400, width: '100%' }}>
+        <DataGrid
+          sx={{
+            // Esconde os botões de editar excluir na visualização normal
+            '& .MuiDataGrid-row button': {
+              visibility: 'hidden'
+            },
+            // Retorna a visibilidade dos botões quando o mouse estiver
+            // sobre a linha da grid
+            '& .MuiDataGrid-row:hover button': {
+              visibility: 'visible'
+            }
+          }}
+          rows={karangos}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[5]}
+          autoHeight
+          disableSelectionOnClick
+        />
+      </Box>
+    </>
+  )
 }
