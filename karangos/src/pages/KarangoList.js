@@ -7,6 +7,8 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ConfirmDialog from '../ui/ConfirmDialog'
+import Notification from '../ui/Notification'
 
 export default function KarangoList() {
 
@@ -96,22 +98,20 @@ export default function KarangoList() {
   ];
 
   const [state, setState] = React.useState({
-    karangos: []  // Vetor vazio
+    karangos: [],       // Vetor vazio,
+    deleteId: null,     // id do registro a ser excluído
+    dialogOpen: false,  // se o diálogo de confirmação está aberto ou não,
+    notifSeverity: '',  // Severidade da notificação
+    notifMessage: ''    // Mensagem de notificação
   })
-  const { karangos } = state
+  const { karangos, deleteId, dialogOpen, notifSeverity, notifMessage } = state
 
-  async function handleDeleteClick(id) {
-    if(window.confirm('Deseja realmente excluir este item?')) {
-      try {
-        await api.delete(`karangos/${id}`)
-        // Recarrega os dados da grid
-        fetchData()
-        window.alert('Item excluído com sucesso.')
-      }
-      catch(error) {
-        window.alert('ERRO: não foi possível excluir o item.\nMotivo: ' + error.message)
-      }
-    }
+  function handleDeleteClick(id) {
+    setState({
+      ...state,
+      deleteId: id,
+      dialogOpen: true
+    })  
   }
 
   // useEffect() com vetor de dependências vazio para ser executado
@@ -121,21 +121,73 @@ export default function KarangoList() {
     fetchData()
   }, [])
 
-  async function fetchData() {
+  async function fetchData(newState = state) {
     try {
       const response = await api.get('karangos')
       // Armazenar o response em um variável de estado
-      console.log({RESPONSE: response.data})
-      setState({...state, karangos: response.data})
+      setState({...newState, karangos: response.data})
     }
     catch (error) {
-      alert('ERRO: ' + error.message)
+      setState({
+        ...newState,
+        notifSeverity: 'error',
+        notifMessage: 'ERRO: ' + error.message
+      })
     }
+  }
+
+  async function handleDialogClose(answer) {
+    let newState = {...state, dialogOpen: false}
+    if(answer) {
+      try {
+        await api.delete(`karangos/${deleteId}`)
+        newState = {
+          ...newState,
+          notifSeverity: 'success',
+          notifMessage: 'Item excluído com sucesso.'
+        }
+        // Recarrega os dados da grid
+        fetchData(newState)
+      }
+      catch(error) {
+        setState({
+          ...newState,
+          notifSeverity: 'error',
+          notifMessage: 'ERRO: não foi possível excluir o item.\nMotivo: ' + error.message
+        })
+      }
+    }
+    else setState(newState)
+  }
+
+  function handleNotifClose(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setState({...state, notifMessage: ''})  // Fecha a notificação
   }
 
   return (
     <>
       <h1>Listagem de Karangos</h1>
+      
+      <ConfirmDialog
+        title="Confirmação necessária"
+        open={dialogOpen}
+        onClose={handleDialogClose}
+      >
+        Deseja realmente excluir este item?
+      </ConfirmDialog>
+
+      <Notification 
+        severity={notifSeverity}
+        message={notifMessage}
+        open={notifMessage}
+        duration={5000}
+        onClose={handleNotifClose}
+      />
+
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGrid
           sx={{
